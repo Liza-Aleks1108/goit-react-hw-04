@@ -9,7 +9,7 @@ import ImageModal from "../ImageModal/ImageModal";
 const ACCESS_KEY = "oRnvDff_v4Fguye2gfRmfu2bAV1azLMWGiVWxPK_ofo";
 const BASE_URL = "https://api.unsplash.com/search/photos";
 
-export const fetchImages = async (query, page = 1, perPage = 10) => {
+export const fetchImages = async (query, page = 1, perPage = 12) => {
   try {
     const response = await axios.get(BASE_URL, {
       params: {
@@ -21,6 +21,7 @@ export const fetchImages = async (query, page = 1, perPage = 10) => {
     });
 
     return response.data;
+    console.log(response.data);
   } catch (error) {
     return { results: [], total_pages: 0 };
   }
@@ -28,11 +29,15 @@ export const fetchImages = async (query, page = 1, perPage = 10) => {
 
 function App() {
   const [query, setQuery] = useState("");
+  const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
 
   const handleSearch = (searchQuery) => {
     setQuery(searchQuery);
+    setImages([]);
+    setPage(1);
   };
 
   const openModal = (image) => {
@@ -48,7 +53,15 @@ function App() {
   return (
     <>
       <SearchBar onSubmit={handleSearch} />{" "}
-      {query && <ImageGallery query={query} openModal={openModal} />}{" "}
+      {query && (
+        <ImageGallery
+          query={query}
+          openModal={openModal}
+          images={images}
+          setImages={setImages}
+          setPage={setPage}
+        />
+      )}{" "}
       {selectedImage && (
         <ImageModal
           isOpen={isModalOpen}

@@ -3,6 +3,7 @@ import ImageCard from "../ImageCard/ImageCard";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import { Audio } from "react-loader-spinner";
 import { fetchImages } from "../App/App";
+import css from "./ImageGallery.module.css"; // Импорт стилей
 
 function ImageGallery({ query, openModal }) {
   const [images, setImages] = useState([]);
@@ -13,12 +14,17 @@ function ImageGallery({ query, openModal }) {
 
   useEffect(() => {
     const getImages = async () => {
+      console.log("Fetching images for query:", query, "page:", page);
+      if (!query) return;
+
       setLoading(true);
       try {
         const data = await fetchImages(query, page);
+        console.log("Fetched data:", data);
         setImages((prevImages) => [...prevImages, ...data.results]);
         setTotalPages(data.total_pages);
       } catch (err) {
+        console.error("Error fetching images:", err);
         setError(err);
       }
       setLoading(false);
@@ -66,9 +72,9 @@ function ImageGallery({ query, openModal }) {
 
   return (
     <>
-      <ul>
+      <ul className={css.gallery}>
         {images.map((image) => (
-          <li key={image.id}>
+          <li key={image.id} className={css.imageCard}>
             <ImageCard
               src={image.urls.small}
               alt={image.alt_description || "Image"}
@@ -78,7 +84,9 @@ function ImageGallery({ query, openModal }) {
         ))}
       </ul>
       {page < totalPages && !loading && (
-        <LoadMoreBtn onClick={handleLoadMore} />
+        <div className={css.loadMoreContainer}>
+          <LoadMoreBtn onClick={handleLoadMore} />
+        </div>
       )}
       {loading && page > 1 && (
         <Audio
@@ -94,4 +102,5 @@ function ImageGallery({ query, openModal }) {
     </>
   );
 }
+
 export default ImageGallery;
