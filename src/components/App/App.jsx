@@ -19,9 +19,8 @@ export const fetchImages = async (query, page = 1, perPage = 12) => {
         client_id: ACCESS_KEY,
       },
     });
-
-    return response.data;
     console.log(response.data);
+    return response.data;
   } catch (error) {
     return { results: [], total_pages: 0 };
   }
@@ -30,9 +29,9 @@ export const fetchImages = async (query, page = 1, perPage = 12) => {
 function App() {
   const [query, setQuery] = useState("");
   const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [page, setPage] = useState(1);
 
   const handleSearch = (searchQuery) => {
     setQuery(searchQuery);
@@ -61,7 +60,7 @@ function App() {
           setImages={setImages}
           setPage={setPage}
         />
-      )}{" "}
+      )}
       {selectedImage && (
         <ImageModal
           isOpen={isModalOpen}

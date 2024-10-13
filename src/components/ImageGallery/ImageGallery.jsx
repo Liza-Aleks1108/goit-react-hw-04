@@ -3,20 +3,19 @@ import ImageCard from "../ImageCard/ImageCard";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import { Audio } from "react-loader-spinner";
 import { fetchImages } from "../App/App";
-import css from "./ImageGallery.module.css"; // Импорт стилей
+import css from "./ImageGallery.module.css";
 
 function ImageGallery({ query, openModal }) {
   const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const getImages = async () => {
       console.log("Fetching images for query:", query, "page:", page);
       if (!query) return;
-
       setLoading(true);
       try {
         const data = await fetchImages(query, page);
